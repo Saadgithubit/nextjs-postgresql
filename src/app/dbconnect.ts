@@ -1,22 +1,28 @@
 import { Sequelize } from 'sequelize';
+import { SequelizeOptions } from 'sequelize-typescript';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-if (!process.env.DATABASE_URL) {
+const connectionString = process.env.DATABASE_URL as string
+
+if (!connectionString) {
     throw new Error('DATABASE_URL environment variable is not defined');
 }
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const dbOptions: SequelizeOptions = {
     dialect: 'postgres',
+    logging: console.log,
+    dialectModule: require('pg'),
     dialectOptions: {
         ssl: {
             require: true,
             rejectUnauthorized: false,
         },
     },
-});
+};
 
+const sequelize = new Sequelize(connectionString, dbOptions);
 
 const initializeDatabase = async () => {
     try {

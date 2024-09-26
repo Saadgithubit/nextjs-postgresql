@@ -1,15 +1,21 @@
-import { Model, DataTypes } from "sequelize";
+'use strict'
+
+import { Model, DataTypes, CreationOptional } from "sequelize";
 import sequelize from "@/app/dbconnect";
 
 class User extends Model {
     declare id: number;
-    declare name: string
+    declare firstName: string;
+    declare lastName: string;
+    declare email: string;
+    declare createdAt: CreationOptional<Date>;
+    declare updateAt: CreationOptional<Date>;
 }
 
 User.init(
     {
         id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
         },
@@ -30,8 +36,9 @@ User.init(
     {
         tableName: 'users',
         sequelize,
-        createdAt: 'create_at',
-        updatedAt: 'update_at',
+        timestamps: true,
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt',
     }
 );
 
