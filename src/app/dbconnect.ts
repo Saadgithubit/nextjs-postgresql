@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize';
 import { SequelizeOptions } from 'sequelize-typescript';
+import pg from 'pg'
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -13,7 +14,7 @@ if (!connectionString) {
 const dbOptions: SequelizeOptions = {
     dialect: 'postgres',
     logging: console.log,
-    dialectModule: require('pg'),
+    dialectModule: pg,
     dialectOptions: {
         ssl: {
             require: true,

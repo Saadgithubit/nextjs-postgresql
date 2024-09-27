@@ -1,5 +1,6 @@
+import UserAdd from "./adduser";
 import EditAndDelete from "./editdelete";
-import { addUser, getAllUser } from "./lib/action";
+import { getAllUser } from "./lib/action";
 
 export default async function Home() {
   const { users } = await getAllUser();
@@ -7,13 +8,7 @@ export default async function Home() {
   return (
     <div>
       <div className="flex justify-center items-start py-4 gap-6">
-        <form action={addUser} className="w-1/3 space-y-4 border-2 p-4">
-          <h1 className="text-2xl font-semibold text-blue-500 text-center">Add User</h1>
-          <input className="w-full border-2 p-4" placeholder="First Name" name="firstName" type="text" />
-          <input className="w-full border-2 p-4" placeholder="Last Name" name="lastName" type="text" />
-          <input className="w-full border-2 p-4" placeholder="Email" name="email" type="text" />
-          <button className="bg-blue-500 text-white rounded-lg px-8 py-4">Add User</button>
-        </form>
+        <UserAdd />
       </div>
       {users && users.map((item) => {
         const { id, firstName, lastName, email, createdAt } = item

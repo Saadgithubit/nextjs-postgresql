@@ -2,6 +2,12 @@
 
 import { redirect } from "next/navigation";
 import User from "../models/User";
+interface FormData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    id?: number
+}
 
 export async function getAllUser() {
     try {
@@ -13,8 +19,7 @@ export async function getAllUser() {
     }
 }
 
-export async function addUser(formData: any) {
-    const { firstName, lastName, email } = Object.fromEntries(formData);
+export async function addUser({ firstName, lastName, email }: FormData) {
     try {
         await User.create({
             firstName: firstName,
@@ -27,10 +32,9 @@ export async function addUser(formData: any) {
     }
 }
 
-export async function updateUser(formData: any) {
-    const { firstName, lastName, email, id } = Object.fromEntries(formData);
+export async function updateUser({ firstName, lastName, email, id }: FormData) {
     try {
-        const updatedUser = await User.update({
+        await User.update({
             firstName: firstName,
             lastName: lastName,
             email: email,
