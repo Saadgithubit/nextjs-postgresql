@@ -25,10 +25,10 @@ export async function addUser({ firstName, lastName, email }: FormData) {
             lastName: lastName,
             email: email,
         });
-        return { success: true }
+        return { success: true, message: 'User Add Successfully' }
     } catch (error) {
         console.error('Error:', error);
-        return { success: false }
+        return { success: false, message: 'Something Went Wrong in User Add!!!' }
     }
 }
 
@@ -40,10 +40,10 @@ export async function updateUser({ firstName, lastName, email, id }: FormData) {
             email: email,
         },
             { where: { id: id } })
-        return { success: true }
+        return { success: true, message: 'User Update Successfully' }
     } catch (error) {
         console.error('Error:', error)
-        return { success: false }
+        return { success: false, message: 'Something Went Wrong in User Update!!!' }
     }
 
 }
@@ -51,16 +51,14 @@ export async function deleteUser(id: number) {
     try {
         const deletedCount = await User.destroy({ where: { id: id }, limit: 1 });
         if (deletedCount === 0) {
-            alert('No user found with that ID')
-            return { success: false }
+            return { success: false, message: 'No user found with that ID' }
 
         } else {
-            console.log(`User with ID ${id} deleted successfully.`);
-            return { success: true }
+            return { success: true, message: 'User Deleted Successfully' }
         }
     } catch (error) {
         console.error('Error:', error);
-        return { success: false }
+        return { success: false, message: 'Something Went Wrong in User Delete!!!' }
     }
 
 }

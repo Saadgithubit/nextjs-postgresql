@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { deleteUser, updateUser } from "./lib/action";
+import Swal from "sweetalert2";
 
 interface UserProps {
     id: number;
@@ -22,7 +23,18 @@ export default function EditAndDelete({ id, setisfetching }: UserProps) {
         }
         const update = await updateUser({ firstName, lastName, email, id });
         if (update.success === true) {
+            Swal.fire({
+                title: "Good job!",
+                text: update.message,
+                icon: "success"
+            });
             setisfetching(true)
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: update.message,
+            });
         }
         setisEdit(undefined);
     };
@@ -30,7 +42,18 @@ export default function EditAndDelete({ id, setisfetching }: UserProps) {
     const handleDelete = async (id: number) => {
         const deleted = await deleteUser(id)
         if (deleted.success === true) {
+            Swal.fire({
+                title: "Good job!",
+                text: deleted.message,
+                icon: "success"
+            });
             setisfetching(true)
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: deleted.message,
+            });
         }
     }
     return (
