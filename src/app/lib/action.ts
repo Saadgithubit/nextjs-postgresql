@@ -1,6 +1,5 @@
 'use server'
 
-import { redirect } from "next/navigation";
 import User from "../models/User";
 interface FormData {
     firstName: string;
@@ -12,7 +11,7 @@ interface FormData {
 export async function getAllUser() {
     try {
         const users = await User.findAll();
-        return { users };
+        return { users: users.map(user => user.get({ plain: true })) };
     } catch (error) {
         console.error('Error fetching users:', error);
         throw new Error('Failed to get users');
@@ -26,9 +25,10 @@ export async function addUser({ firstName, lastName, email }: FormData) {
             lastName: lastName,
             email: email,
         });
-        redirect('/')
+        return { success: true }
     } catch (error) {
         console.error('Error:', error);
+        return { success: false }
     }
 }
 
@@ -40,25 +40,27 @@ export async function updateUser({ firstName, lastName, email, id }: FormData) {
             email: email,
         },
             { where: { id: id } })
-        redirect('/')
+        return { success: true }
     } catch (error) {
         console.error('Error:', error)
+        return { success: false }
     }
 
 }
 export async function deleteUser(id: number) {
     try {
         const deletedCount = await User.destroy({ where: { id: id }, limit: 1 });
-        console.log(deletedCount);
-
         if (deletedCount === 0) {
             alert('No user found with that ID')
+            return { success: false }
+
         } else {
             console.log(`User with ID ${id} deleted successfully.`);
-            redirect('/')
+            return { success: true }
         }
     } catch (error) {
         console.error('Error:', error);
+        return { success: false }
     }
 
 }
