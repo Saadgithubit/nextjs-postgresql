@@ -10,8 +10,10 @@ interface FormData {
 
 export async function getAllUser() {
     try {
-        const users = await User.findAll();
-        return { users: users.map(user => user.get({ plain: true })) };
+        const response = await User.findAll();
+        const data = response.map(user => user.get({ plain: true }))
+        const users = data.sort((a, b) => Number(b.id) - Number(a.id));
+        return { users: users };
     } catch (error) {
         console.error('Error fetching users:', error);
         throw new Error('Failed to get users');
@@ -25,7 +27,8 @@ export async function addUser({ firstName, lastName, email }: FormData) {
             lastName: lastName,
             email: email,
         });
-        return { success: true, message: 'User Add Successfully' }
+        const { users } = await getAllUser()
+        return { success: true, message: 'User Add Successfully', users: users }
     } catch (error) {
         console.error('Error:', error);
         return { success: false, message: 'Something Went Wrong in User Add!!!' }
@@ -40,7 +43,8 @@ export async function updateUser({ firstName, lastName, email, id }: FormData) {
             email: email,
         },
             { where: { id: id } })
-        return { success: true, message: 'User Update Successfully' }
+        const { users } = await getAllUser()
+        return { success: true, message: 'User Update Successfully', users: users }
     } catch (error) {
         console.error('Error:', error)
         return { success: false, message: 'Something Went Wrong in User Update!!!' }
@@ -54,7 +58,8 @@ export async function deleteUser(id: number) {
             return { success: false, message: 'No user found with that ID' }
 
         } else {
-            return { success: true, message: 'User Deleted Successfully' }
+            const { users } = await getAllUser()
+            return { success: true, message: 'User Deleted Successfully', users: users }
         }
     } catch (error) {
         console.error('Error:', error);

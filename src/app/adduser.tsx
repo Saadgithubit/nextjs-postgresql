@@ -1,40 +1,31 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2'
 import Image from 'next/image';
 
-import { addUser, getAllUser } from "./lib/action";
+import { addUser } from "./lib/action";
 import EditAndDelete from './editdelete';
 import loading from '@/image/loading.gif'
 
-interface User {
+export interface Display {
     id: number;
     firstName: string;
     lastName: string;
     email: string;
-    createdAt: string; // Adjust type if necessary
+    createdAt: string;
 }
 
-export default function UserAdd() {
-    const [userData, setUserData] = useState<User[]>([])
-    const [isfetching, setisfetching] = useState(true)
+export interface UserProps {
+    allUsers: Display[]
+}
+
+export default function UserAdd({ allUsers }: UserProps) {
+    const [userData, setUserData] = useState<Display[]>(allUsers)
     const [firstName, setfirstName] = useState<string>('')
     const [lastName, setlastName] = useState<string>('')
     const [email, setemail] = useState<string>('')
-    useEffect(() => {
-        setisfetching(false)
-        fetchUsers()
-    }, [isfetching])
 
-    const fetchUsers = async () => {
-        const { users } = await getAllUser();
-        const sortedUsers = users.sort((a, b) => Number(b.id) - Number(a.id));
-        console.log(sortedUsers);
-
-        setUserData(sortedUsers)
-
-    }
     const handeSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         if (!firstName || !lastName || !email) {
@@ -48,7 +39,7 @@ export default function UserAdd() {
                 text: add.message,
                 icon: "success"
             });
-            setisfetching(true)
+            setUserData(add.users ?? [])
         } else {
             Swal.fire({
                 icon: "error",
@@ -95,7 +86,7 @@ export default function UserAdd() {
                                     <h1 className='font-semibold'>Register Date:</h1>
                                     <span>{formattedDate}</span>
                                 </div>
-                                <EditAndDelete id={id} setisfetching={setisfetching} />
+                                <EditAndDelete id={id} setUserData={setUserData} />
                             </div>
                         )
                     })}

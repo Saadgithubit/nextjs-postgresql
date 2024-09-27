@@ -3,12 +3,13 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { deleteUser, updateUser } from "./lib/action";
 import Swal from "sweetalert2";
+import { Display } from "./adduser";
 
 interface UserProps {
     id: number;
-    setisfetching: Dispatch<SetStateAction<boolean>>;
+    setUserData: Dispatch<SetStateAction<Display[]>>;
 }
-export default function EditAndDelete({ id, setisfetching }: UserProps) {
+export default function EditAndDelete({ id, setUserData }: UserProps) {
     const [firstName, setfirstName] = useState<string>('')
     const [lastName, setlastName] = useState<string>('')
     const [email, setemail] = useState<string>('')
@@ -28,7 +29,7 @@ export default function EditAndDelete({ id, setisfetching }: UserProps) {
                 text: update.message,
                 icon: "success"
             });
-            setisfetching(true)
+            setUserData(update.users ?? [])
         } else {
             Swal.fire({
                 icon: "error",
@@ -47,7 +48,7 @@ export default function EditAndDelete({ id, setisfetching }: UserProps) {
                 text: deleted.message,
                 icon: "success"
             });
-            setisfetching(true)
+            setUserData(deleted.users ?? [])
         } else {
             Swal.fire({
                 icon: "error",
