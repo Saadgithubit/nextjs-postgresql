@@ -50,6 +50,9 @@ export default function UserAdd({ allUsers }: UserProps) {
         }
         const add = await addUser({ firstName, lastName, email });
         if (add.success === true) {
+            setfirstName('')
+            setlastName('')
+            setemail('')
             setLoading(false)
             setMessage(add.message)
             setSuccessAlert(true)
@@ -66,9 +69,9 @@ export default function UserAdd({ allUsers }: UserProps) {
                 <div className="flex justify-center items-start py-4 gap-6">
                     <form onSubmit={handeSubmit} className="w-full lg:w-1/3 space-y-4 border-2 p-4">
                         <h1 className="text-2xl font-semibold text-blue-500 text-center">Add User</h1>
-                        <input onChange={(e) => setfirstName(e.target.value)} className="w-full border-2 p-4" placeholder="First Name" name="firstName" type="text" />
-                        <input onChange={(e) => setlastName(e.target.value)} className="w-full border-2 p-4" placeholder="Last Name" name="lastName" type="text" />
-                        <input onChange={(e) => setemail(e.target.value)} className="w-full border-2 p-4" placeholder="Email" name="email" type="text" />
+                        <input value={firstName} onChange={(e) => setfirstName(e.target.value)} className="w-full border-2 p-4" placeholder="First Name" type="text" />
+                        <input value={lastName} onChange={(e) => setlastName(e.target.value)} className="w-full border-2 p-4" placeholder="Last Name" type="text" />
+                        <input value={email} onChange={(e) => setemail(e.target.value)} className="w-full border-2 p-4" placeholder="Email" type="text" />
                         <button type='submit' className="bg-blue-500 text-white rounded-lg px-8 py-4">Add User</button>
                     </form>
                     <Snackbar open={successAlert} autoHideDuration={4000} onClose={handleClose}>
