@@ -2,8 +2,8 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { deleteUser, updateUser } from "./lib/action";
-import Swal from "sweetalert2";
 import { Display } from "./adduser";
+import { Alert, Backdrop, CircularProgress, Snackbar, SnackbarCloseReason } from "@mui/material";
 
 interface UserProps {
     id: number;
@@ -14,47 +14,57 @@ export default function EditAndDelete({ id, setUserData }: UserProps) {
     const [lastName, setlastName] = useState<string>('')
     const [email, setemail] = useState<string>('')
     const [isEdit, setisEdit] = useState<number | undefined>(undefined)
+    const [successAlert, setSuccessAlert] = useState(false);
+    const [failedAlert, setfailedAlert] = useState(false);
+    const [message, setMessage] = useState('')
+    const [loading, setLoading] = useState(false)
+
+    const handleClose = (
+        event?: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+    ) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSuccessAlert(false);
+    };
+
 
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setLoading(true)
         if (!firstName || !lastName || !email) {
             alert('fill all fields')
             return
         }
         const update = await updateUser({ firstName, lastName, email, id });
         if (update.success === true) {
-            Swal.fire({
-                title: "Good job!",
-                text: update.message,
-                icon: "success"
-            });
+            setLoading(false)
+            setMessage(update.message)
+            setSuccessAlert(true)
             setUserData(update.users ?? [])
         } else {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: update.message,
-            });
+            setLoading(false)
+            setMessage(update.message)
+            setfailedAlert(true)
         }
         setisEdit(undefined);
     };
 
     const handleDelete = async (id: number) => {
+        setLoading(true)
         const deleted = await deleteUser(id)
         if (deleted.success === true) {
-            Swal.fire({
-                title: "Good job!",
-                text: deleted.message,
-                icon: "success"
-            });
+            setLoading(false)
+            setMessage(deleted.message)
+            setSuccessAlert(true)
             setUserData(deleted.users ?? [])
         } else {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: deleted.message,
-            });
+            setLoading(false)
+            setMessage(deleted.message)
+            setfailedAlert(true)
         }
     }
     return (
@@ -70,6 +80,26 @@ export default function EditAndDelete({ id, setUserData }: UserProps) {
                 <button onClick={() => setisEdit(id)} className="bg-green-400 text-white px-8 py-2 w-full md:w-auto">Edit</button>
                 <button onClick={() => { handleDelete(id) }} className="bg-gray-500 text-white px-8 py-2 w-full md:w-auto">Delete</button>
             </div>
+            <Snackbar open={successAlert} autoHideDuration={4000} onClose={handleClose}>
+                <Alert
+                    onClose={handleClose}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {message}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={failedAlert} autoHideDuration={4000} onClose={handleClose}>
+                <Alert severity="error">{message}</Alert>
+            </Snackbar>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+                onClick={handleClose}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     )
 }

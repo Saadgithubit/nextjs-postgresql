@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import Swal from 'sweetalert2'
 import Image from 'next/image';
 
 import { addUser } from "./lib/action";
 import EditAndDelete from './editdelete';
-import loading from '@/image/loading.gif'
+import loader from '@/image/loading.gif'
+import { Alert, Backdrop, CircularProgress, Snackbar, SnackbarCloseReason } from '@mui/material';
 
 export interface Display {
     id: number;
@@ -25,27 +25,39 @@ export default function UserAdd({ allUsers }: UserProps) {
     const [firstName, setfirstName] = useState<string>('')
     const [lastName, setlastName] = useState<string>('')
     const [email, setemail] = useState<string>('')
+    const [successAlert, setSuccessAlert] = useState(false);
+    const [failedAlert, setfailedAlert] = useState(false);
+    const [loading, setLoading] = useState(false)
+    const [message, setMessage] = useState('')
+
+    const handleClose = (
+        event?: React.SyntheticEvent | Event,
+        reason?: SnackbarCloseReason,
+    ) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSuccessAlert(false);
+    };
 
     const handeSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
+        setLoading(true)
         if (!firstName || !lastName || !email) {
             alert('fill all fields')
             return
         }
         const add = await addUser({ firstName, lastName, email });
         if (add.success === true) {
-            Swal.fire({
-                title: "Good job!",
-                text: add.message,
-                icon: "success"
-            });
+            setLoading(false)
+            setMessage(add.message)
+            setSuccessAlert(true)
             setUserData(add.users ?? [])
         } else {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: add.message,
-            });
+            setLoading(false)
+            setMessage(add.message)
+            setfailedAlert(true)
         }
     }
     return (
@@ -59,6 +71,26 @@ export default function UserAdd({ allUsers }: UserProps) {
                         <input onChange={(e) => setemail(e.target.value)} className="w-full border-2 p-4" placeholder="Email" name="email" type="text" />
                         <button type='submit' className="bg-blue-500 text-white rounded-lg px-8 py-4">Add User</button>
                     </form>
+                    <Snackbar open={successAlert} autoHideDuration={4000} onClose={handleClose}>
+                        <Alert
+                            onClose={handleClose}
+                            severity="success"
+                            variant="filled"
+                            sx={{ width: '100%' }}
+                        >
+                            {message}
+                        </Alert>
+                    </Snackbar>
+                    <Snackbar open={failedAlert} autoHideDuration={4000} onClose={handleClose}>
+                        <Alert severity="error">This is an error Alert.</Alert>
+                    </Snackbar>
+                    <Backdrop
+                        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                        open={loading}
+                        onClick={handleClose}
+                    >
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                 </div>
                 <div className='flex flex-wrap gap-4 justify-center'>
                     {userData.map((item) => {
@@ -92,7 +124,7 @@ export default function UserAdd({ allUsers }: UserProps) {
                     })}
                 </div>
             </div> :
-                <Image className='w-[50%] md:w-auto mx-auto mt-16' src={loading} alt='loader' />}
+                <Image className='w-[50%] md:w-auto mx-auto mt-16' src={loader} alt='loader' />}
         </div>
 
     )
