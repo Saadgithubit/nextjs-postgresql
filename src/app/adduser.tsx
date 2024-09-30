@@ -1,11 +1,9 @@
 'use client'
 
 import React, { useState } from 'react';
-import Image from 'next/image';
 
 import { addUser } from "./lib/action";
 import EditAndDelete from './editdelete';
-import loader from '@/image/loading.gif'
 import { Alert, Backdrop, CircularProgress, Snackbar, SnackbarCloseReason } from '@mui/material';
 
 export interface Display {
