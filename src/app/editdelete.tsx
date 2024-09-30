@@ -3,7 +3,8 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { deleteUser, updateUser } from "./lib/action";
 import { Display } from "./adduser";
-import { Alert, Backdrop, CircularProgress, Snackbar, SnackbarCloseReason } from "@mui/material";
+import { Alert, Backdrop, CircularProgress, Snackbar, SnackbarCloseReason, Tooltip } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface UserProps {
     id: number;
@@ -69,14 +70,19 @@ export default function EditAndDelete({ id, setUserData }: UserProps) {
     }
     return (
         <div>
-            {isEdit === id && <form className="space-y-4 p-4" onSubmit={handleSubmit}>
-                <h1 className="text-2xl font-semibold text-blue-500 text-center">Add User</h1>
+            {isEdit === id && <form className="space-y-4 p-4 relative border-t-2 border-b-2" onSubmit={handleSubmit}>
+                <div onClick={() => setisEdit(undefined)} className="absolute top-6 right-4">
+                    <Tooltip title="Close" arrow>
+                        <CloseIcon />
+                    </Tooltip>
+                </div>
+                <h1 className="text-2xl font-semibold text-blue-500 text-center">Edit User</h1>
                 <input onChange={(e) => setfirstName(e.target.value)} className="w-full border-2 p-4" placeholder="First Name" name="firstName" type="text" />
                 <input onChange={(e) => setlastName(e.target.value)} className="w-full border-2 p-4" placeholder="Last Name" name="lastName" type="text" />
                 <input onChange={(e) => setemail(e.target.value)} className="w-full border-2 p-4" placeholder="Email" name="email" type="text" />
                 <button type="submit" className="bg-blue-500 text-white rounded-lg px-8 py-4">Submit</button>
             </form>}
-            <div className="flex flex-wrap justify-center gap-8">
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 px-4 md:px-0 py-2">
                 <button onClick={() => setisEdit(id)} className="bg-green-400 text-white px-8 py-2 w-full md:w-auto">Edit</button>
                 <button onClick={() => { handleDelete(id) }} className="bg-gray-500 text-white px-8 py-2 w-full md:w-auto">Delete</button>
             </div>
