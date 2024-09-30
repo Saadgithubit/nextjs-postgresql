@@ -127,7 +127,9 @@ export default function UserAdd({ allUsers }: UserProps) {
                     })}
                 </div>
             </div> :
-                <Image className='w-[50%] md:w-auto mx-auto mt-16' src={loader} alt='loader' />}
+                <div className='h-screen flex justify-center items-center'>
+                    <CircularProgress className='mx-auto' />
+                </div>}
         </div>
 
     )
