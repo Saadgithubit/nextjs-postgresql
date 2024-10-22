@@ -62,10 +62,11 @@ export default function UserAdd({ allUsers }: UserProps) {
         }
     }
     return (
-        <div>
+        <div className='border-2'>
+            <h1 className='text-center text-4xl font-bold py-8'>Next + Posgress CRUD Operation</h1>
             {userData.length > 0 ? <div className='px-4 lg:px-0'>
                 <div className="flex justify-center items-start py-4 gap-6">
-                    <form onSubmit={handeSubmit} className="w-full lg:w-1/3 space-y-4 border-2 p-4">
+                    <form onSubmit={handeSubmit} className="w-full lg:w-1/3 space-y-4 border-2 p-4 bg-[#ebeef2] rounded-xl">
                         <h1 className="text-2xl font-semibold text-blue-500 text-center">Add User</h1>
                         <input value={firstName} onChange={(e) => setfirstName(e.target.value)} className="w-full border-2 p-4" placeholder="First Name" type="text" />
                         <input value={lastName} onChange={(e) => setlastName(e.target.value)} className="w-full border-2 p-4" placeholder="Last Name" type="text" />
@@ -102,7 +103,7 @@ export default function UserAdd({ allUsers }: UserProps) {
                             day: '2-digit'
                         });
                         return (
-                            <div key={id} className="border-2 w-full lg:w-[25%] py-4 mb-4 lg:mb-0">
+                            <div key={id} className="border-2 w-full lg:w-[25%] py-4 mb-4 lg:mb-0 bg-[#ebeef2] rounded-xl">
                                 <div className="flex gap-4 p-3">
                                     <h1 className='font-semibold'>Id:</h1>
                                     <span>{id}</span>
