@@ -1,11 +1,12 @@
-import UserAdd from "./adduser";
-import { getAllUser } from "./lib/action";
+
 
 export default async function Home() {
-  const { users } = await getAllUser();
+
 
   return (
-    <UserAdd allUsers={users} />
+    <div className="h-screen flex justify-center items-center">
+      <h3 className="font-bold text-4xl">Home</h3>
+    </div>
   );
 }
 

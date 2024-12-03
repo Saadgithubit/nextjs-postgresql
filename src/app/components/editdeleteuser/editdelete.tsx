@@ -1,18 +1,17 @@
 'use client'
 
 import { Dispatch, SetStateAction, useState } from "react";
-import { deleteUser, updateUser } from "./lib/action";
-import { Display } from "./adduser";
 import { Alert, Backdrop, Box, Button, CircularProgress, Modal, Snackbar, SnackbarCloseReason, Tooltip, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { updateUser, deleteUser } from "@/app/lib/action";
+import { Display } from "../addusers/adduser";
 
 interface UserProps {
     id: number;
     setUserData: Dispatch<SetStateAction<Display[]>>;
 }
 export default function EditAndDelete({ id, setUserData }: UserProps) {
-    const [firstName, setfirstName] = useState<string>('')
-    const [lastName, setlastName] = useState<string>('')
+    const [userName, setuserName] = useState<string>('')
     const [email, setemail] = useState<string>('')
     const [isEdit, setisEdit] = useState<number | undefined>(undefined)
     const [successAlert, setSuccessAlert] = useState(false);
@@ -37,11 +36,11 @@ export default function EditAndDelete({ id, setUserData }: UserProps) {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true)
-        if (!firstName || !lastName || !email) {
+        if (!userName || !email) {
             alert('fill all fields')
             return
         }
-        const update = await updateUser({ firstName, lastName, email, id });
+        const update = await updateUser({ userName, email, id });
         if (update.success === true) {
             setLoading(false)
             setMessage(update.message)
@@ -79,8 +78,7 @@ export default function EditAndDelete({ id, setUserData }: UserProps) {
                     </Tooltip>
                 </div>
                 <h1 className="text-2xl font-semibold text-blue-500 text-center">Edit User</h1>
-                <input onChange={(e) => setfirstName(e.target.value)} className="w-full border-2 p-4" placeholder="First Name" name="firstName" type="text" />
-                <input onChange={(e) => setlastName(e.target.value)} className="w-full border-2 p-4" placeholder="Last Name" name="lastName" type="text" />
+                <input onChange={(e) => setuserName(e.target.value)} className="w-full border-2 p-4" placeholder="First Name" name="firstName" type="text" />
                 <input onChange={(e) => setemail(e.target.value)} className="w-full border-2 p-4" placeholder="Email" name="email" type="text" />
                 <button type="submit" className="bg-blue-500 text-white rounded-lg px-8 py-4">Submit</button>
             </form>}

@@ -2,14 +2,13 @@
 
 import React, { useState } from 'react';
 
-import { addUser } from "./lib/action";
-import EditAndDelete from './editdelete';
+import { addUser } from "../../lib/action";
 import { Alert, Backdrop, CircularProgress, Snackbar, SnackbarCloseReason } from '@mui/material';
+import EditAndDelete from '../editdeleteuser/editdelete';
 
 export interface Display {
     id: number;
-    firstName: string;
-    lastName: string;
+    username: string;
     email: string;
     createdAt: string;
 }
@@ -20,8 +19,7 @@ export interface UserProps {
 
 export default function UserAdd({ allUsers }: UserProps) {
     const [userData, setUserData] = useState<Display[]>(allUsers)
-    const [firstName, setfirstName] = useState<string>('')
-    const [lastName, setlastName] = useState<string>('')
+    const [userName, setuserName] = useState<string>('')
     const [email, setemail] = useState<string>('')
     const [successAlert, setSuccessAlert] = useState(false);
     const [failedAlert, setfailedAlert] = useState(false);
@@ -42,14 +40,13 @@ export default function UserAdd({ allUsers }: UserProps) {
     const handeSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         setLoading(true)
-        if (!firstName || !lastName || !email) {
+        if (!userName || !email) {
             alert('fill all fields')
             return
         }
-        const add = await addUser({ firstName, lastName, email });
+        const add = await addUser({ userName, email });
         if (add.success === true) {
-            setfirstName('')
-            setlastName('')
+            setuserName('')
             setemail('')
             setLoading(false)
             setMessage(add.message)
@@ -68,8 +65,7 @@ export default function UserAdd({ allUsers }: UserProps) {
                 <div className="flex justify-center items-start py-4 gap-6">
                     <form onSubmit={handeSubmit} className="w-full lg:w-1/3 space-y-4 border-2 p-4 bg-[#ebeef2] rounded-xl">
                         <h1 className="text-2xl font-semibold text-blue-500 text-center">Add User</h1>
-                        <input value={firstName} onChange={(e) => setfirstName(e.target.value)} className="w-full border-2 p-4" placeholder="First Name" type="text" />
-                        <input value={lastName} onChange={(e) => setlastName(e.target.value)} className="w-full border-2 p-4" placeholder="Last Name" type="text" />
+                        <input value={userName} onChange={(e) => setuserName(e.target.value)} className="w-full border-2 p-4" placeholder="Username" type="text" />
                         <input value={email} onChange={(e) => setemail(e.target.value)} className="w-full border-2 p-4" placeholder="Email" type="text" />
                         <button type='submit' className="bg-blue-500 text-white rounded-lg px-8 py-4">Add User</button>
                     </form>
@@ -96,7 +92,7 @@ export default function UserAdd({ allUsers }: UserProps) {
                 </div>
                 <div className='flex flex-wrap gap-4 justify-center'>
                     {userData.map((item) => {
-                        const { id, firstName, lastName, email, createdAt } = item
+                        const { id, username, email, createdAt } = item
                         const formattedDate = new Date(createdAt).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: '2-digit',
@@ -109,8 +105,8 @@ export default function UserAdd({ allUsers }: UserProps) {
                                     <span>{id}</span>
                                 </div>
                                 <div className="flex gap-4 p-3">
-                                    <h1 className='font-semibold'>FullName:</h1>
-                                    <span>{`${firstName} ${lastName}`}</span>
+                                    <h1 className='font-semibold'>UserName:</h1>
+                                    <span>{username}</span>
                                 </div>
                                 <div className="flex gap-4 p-3">
                                     <h1 className='font-semibold'>Email:</h1>

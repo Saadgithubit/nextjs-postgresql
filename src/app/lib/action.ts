@@ -2,8 +2,7 @@
 
 import User from "../models/User";
 interface FormData {
-    firstName: string;
-    lastName: string;
+    userName: string;
     email: string;
     id?: number
 }
@@ -20,12 +19,13 @@ export async function getAllUser() {
     }
 }
 
-export async function addUser({ firstName, lastName, email }: FormData) {
+export async function addUser({ userName, email }: FormData) {
     try {
         await User.create({
-            firstName: firstName,
-            lastName: lastName,
+            username: userName,
             email: email,
+            role: 'employee',
+            active: true
         });
         const { users } = await getAllUser()
         return { success: true, message: 'User Add Successfully', users: users }
@@ -35,12 +35,13 @@ export async function addUser({ firstName, lastName, email }: FormData) {
     }
 }
 
-export async function updateUser({ firstName, lastName, email, id }: FormData) {
+export async function updateUser({ userName, email, id }: FormData) {
     try {
         await User.update({
-            firstName: firstName,
-            lastName: lastName,
+            username: userName,
             email: email,
+            role: 'employee',
+            active: true
         },
             { where: { id: id } })
         const { users } = await getAllUser()

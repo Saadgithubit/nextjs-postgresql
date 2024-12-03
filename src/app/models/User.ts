@@ -5,9 +5,10 @@ import sequelize from "@/app/dbconnect";
 
 class User extends Model {
     declare id: number;
-    declare firstName: string;
-    declare lastName: string;
+    declare username: string;
     declare email: string;
+    declare role: string;
+    declare active: string;
     declare createdAt: CreationOptional<Date>;
     declare updateAt: CreationOptional<Date>;
 }
@@ -19,16 +20,20 @@ User.init(
             autoIncrement: true,
             primaryKey: true
         },
-        firstName: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        lastName: {
+        username: {
             type: DataTypes.STRING,
             allowNull: false
         },
         email: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        active: {
+            type: DataTypes.BOOLEAN,
             allowNull: false
         },
 
