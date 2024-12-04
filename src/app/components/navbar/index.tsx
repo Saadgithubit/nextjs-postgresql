@@ -17,8 +17,12 @@ import Link from 'next/link';
 const pages = [{ text: 'Home', href: '/' }, { text: 'Admin', href: '/admin' }];
 
 function Navbar() {
+    const [isClient, setIsclient] = React.useState(false)
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
+    React.useEffect(() => {
+        setIsclient(true)
+    }, [])
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -26,7 +30,7 @@ function Navbar() {
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
-
+    if (!isClient) return null
     return (
         <AppBar position="static">
             <Container maxWidth="xl">
