@@ -8,7 +8,7 @@ class User extends Model {
     declare username: string;
     declare email: string;
     declare role: string;
-    declare active: string;
+    declare active: boolean;
     declare createdAt: CreationOptional<Date>;
     declare updateAt: CreationOptional<Date>;
 }
